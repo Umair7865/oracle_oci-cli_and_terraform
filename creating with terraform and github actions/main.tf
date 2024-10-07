@@ -41,11 +41,11 @@ variable "region" {}
 variable "compartment_id" {}
 variable "availability_domain" {}
 variable "shape" { default = "VM.Standard.E5.Flex" }
-variable "vm_display_name" { default = "MyTerraformVM" }
+variable "vm_display_name" { default = "Bastion-host" }
 variable "subnet_id" {}
 variable "image_id" {}
-variable "ocpus" { default = 4 }
-variable "memory_in_gbs" { default = 32 }
+variable "ocpus" { default = 1 }
+variable "memory_in_gbs" { default = 2 }
 variable "ssh_public_key" {
   description = "SSH public key content for VM access"
 }
