@@ -1,9 +1,12 @@
 name: Deploy VM on Oracle Cloud
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      vm_name:
+        description: 'Name of the VM'
+        required: true
+        default: 'Bastion-host'
 
 jobs:
   deploy:
