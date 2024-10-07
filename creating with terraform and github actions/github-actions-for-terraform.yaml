@@ -1,51 +1,38 @@
-provider "oci" {
-  tenancy_ocid     = var.tenancy_ocid
-  user_ocid        = var.user_ocid
-  fingerprint      = var.fingerprint
-  private_key_path = var.private_key_path
-  region           = var.region
-}
+name: Deploy OCI VM with Terraform
 
-resource "oci_core_instance" "vm_instance" {
-  availability_domain = var.availability_domain
-  compartment_id      = var.compartment_id
-  shape               = var.shape
-  display_name        = var.vm_display_name
+on:
+  workflow_dispatch:
 
-  create_vnic_details {
-    subnet_id        = var.subnet_id
-    assign_public_ip = true
-  }
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
 
-  source_details {
-    source_type = "image"
-    source_id   = var.image_id
-  }
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-  shape_config {
-    memory_in_gbs = var.memory_in_gbs
-    ocpus         = var.ocpus
-  }
+    - name: Install Terraform
+      uses: hashicorp/setup-terraform@v1
 
-  metadata = {
-    ssh_authorized_keys = var.ssh_public_key  # Passing public key content directly
-  }
-}
+    - name: Set up OCI Private Key
+      run: |
+        mkdir -p ~/.oci
+        echo "${{ secrets.OCI_PRIVATE_KEY }}" > ~/.oci/oci_api_key.pem
+        chmod 600 ~/.oci/oci_api_key.pem
 
-# Define the variables required by Terraform
-variable "tenancy_ocid" {}
-variable "user_ocid" {}
-variable "fingerprint" {}
-variable "private_key_path" {}
-variable "region" {}
-variable "compartment_id" {}
-variable "availability_domain" {}
-variable "shape" { default = "VM.Standard.E5.Flex" }
-variable "vm_display_name" { default = "Bastion-host" }
-variable "subnet_id" {}
-variable "image_id" {}
-variable "ocpus" { default = 1 }
-variable "memory_in_gbs" { default = 2 }
-variable "ssh_public_key" {
-  description = "SSH public key content for VM access"
-}
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve
+      env:
+        TF_VAR_tenancy_ocid: ${{ secrets.OCI_TENANCY_OCID }}
+        TF_VAR_user_ocid: ${{ secrets.OCI_USER_OCID }}
+        TF_VAR_fingerprint: ${{ secrets.OCI_KEY_FINGERPRINT }}
+        TF_VAR_private_key_path: ~/.oci/oci_api_key.pem
+        TF_VAR_region: ${{ secrets.OCI_REGION }}
+        TF_VAR_compartment_id: ${{ secrets.OCI_COMPARTMENT_ID }}
+        TF_VAR_availability_domain: ${{ secrets.OCI_AVAILABILITY_DOMAIN }}
+        TF_VAR_subnet_id: ${{ secrets.OCI_SUBNET_ID }}
+        TF_VAR_image_id: ${{ secrets.OCI_IMAGE_ID }}
+        TF_VAR_ssh_public_key: "${{ secrets.SSH_PUBLIC_KEY }}"  # Pass public key content directly
