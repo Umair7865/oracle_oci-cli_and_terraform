@@ -1,10 +1,10 @@
-name: Deploy VM on Oracle Cloud
+name: Deploy Bastion on Oracle Cloud
 
 on:
   workflow_dispatch:
     inputs:
       vm_name:
-        description: 'Name of the VM'
+        description: 'ENTER Name of VM'
         required: true
         default: 'Bastion-host'
 
@@ -14,7 +14,7 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Install OCI CLI
       run: |
@@ -57,4 +57,4 @@ jobs:
           --assign-public-ip true \
           --ssh-authorized-keys-file ~/.oci/my_public_key.pub \
           --shape-config '{ "ocpus": 1, "memoryInGBs": 2 }' \
-          --display-name "Bastion-Host"
+          --display-name ${{ github.event.inputs.vm_name }}
