@@ -19,6 +19,7 @@ jobs:
         mkdir -p ~/.oci
         echo "${{ secrets.OCI_PRIVATE_KEY }}" > ~/.oci/oci_api_key.pem
         chmod 600 ~/.oci/oci_api_key.pem
+        ls -l ~/.oci/oci_api_key.pem
 
     - name: Terraform Init
       run: terraform init
