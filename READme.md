@@ -76,7 +76,22 @@ Here are the steps to set up your own GitHub Actions runner:
      sudo ./svc.sh start
      ```
 
-7. **Update GitHub Actions Workflow**:
+7. **Add or Modify Labels**
+   - If there is a label mismatch, reconfigure the runner with the correct labels.
+   - To do so, SSH into your VM and navigate to the `actions-runner` directory:
+
+     ```sh
+     cd ~/actions-runner
+     ./config.sh remove  # To remove the existing configuration
+     ```
+
+   - Then, configure the runner again with the correct URL, token, and labels:
+
+     ```sh
+     ./config.sh --url https://github.com/owner/repository --token YOUR_TOKEN --labels my-runner
+     ```
+
+8. **Update GitHub Actions Workflow**:
    - To use the self-hosted runner, update your GitHub Actions workflow to target the runner using its label.
 
      ```yaml
