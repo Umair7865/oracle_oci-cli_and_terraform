@@ -22,10 +22,14 @@ jobs:
         ls -l ~/.oci/oci_api_key.pem
 
     - name: Terraform Init
-      run: terraform init
+      run: | 
+        cd Bastion-host
+        terraform init
 
     - name: Terraform Apply
-      run: terraform apply -auto-approve
+      run: | 
+        cd Bastion-host 
+        terraform apply -auto-approve
       env:
         TF_VAR_tenancy_ocid: ${{ secrets.OCI_TENANCY_OCID }}
         TF_VAR_user_ocid: ${{ secrets.OCI_USER_OCID }}
@@ -36,4 +40,4 @@ jobs:
         TF_VAR_availability_domain: ${{ secrets.OCI_AVAILABILITY_DOMAIN }}
         TF_VAR_subnet_id: ${{ secrets.OCI_SUBNET_ID }}
         TF_VAR_image_id: ${{ secrets.OCI_IMAGE_ID }}
-        TF_VAR_ssh_public_key: "${{ secrets.SSH_PUBLIC_KEY }}"  # Pass public key content directly
+        TF_VAR_ssh_public_key: "${{ secrets.OCI_SSH_PUBLIC_KEY }}"  # Pass public key content directly
