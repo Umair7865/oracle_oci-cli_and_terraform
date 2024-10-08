@@ -158,4 +158,126 @@ Given your setup, you could create a runner on one of your on-premises servers.
 
 This setup helps you integrate your hybrid infrastructure into the CI/CD pipeline, allowing flexibility and leveraging your existing resources. If you have specific requirements for a particular infrastructure part, let me know, and we can tweak the setup accordingly.
 
+
+**********************************************************************
+
+
+To use your Oracle Cloud VM as a GitHub Actions runner, you can follow a similar process as before. The key is to configure the runner to run on your Oracle Cloud VM to meet your security requirements. Below, I’ll walk you through the process:
+
+### Step-by-Step Guide to Use Oracle Cloud VM as GitHub Actions Runner
+
+1. **Access Your Oracle Cloud VM**:
+   - SSH into the VM you want to use as the GitHub Actions runner.
+
+   ```sh
+   ssh opc@<VM_IP_ADDRESS>
+   ```
+
+2. **Install Dependencies**:
+   - Ensure your Oracle Cloud VM has the required dependencies for GitHub Actions runner.
+     - Install `curl`:
+
+       ```sh
+       sudo apt-get update
+       sudo apt-get install -y curl
+       ```
+
+3. **Download and Install GitHub Actions Runner**:
+   - Create a directory for the runner:
+
+     ```sh
+     mkdir actions-runner && cd actions-runner
+     ```
+
+   - Download the GitHub Actions runner software:
+
+     ```sh
+     curl -o actions-runner-linux-x64-2.308.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.308.0/actions-runner-linux-x64-2.308.0.tar.gz
+     ```
+
+   - Extract the installer:
+
+     ```sh
+     tar xzf ./actions-runner-linux-x64-2.308.0.tar.gz
+     ```
+
+4. **Configure the Runner**:
+   - Obtain the runner registration token:
+     - Go to your GitHub repository **Settings > Actions > Runners** and click **Add Runner**.
+     - You will see a token along with instructions.
+
+   - Register your VM as a GitHub Actions runner by running:
+
+     ```sh
+     # Replace REPO_URL and TOKEN with actual values
+     ./config.sh --url https://github.com/owner/repository --token YOUR_TOKEN
+     ```
+
+   - You can specify labels during the configuration step to target jobs specifically for this runner:
+
+     ```sh
+     ./config.sh --url https://github.com/owner/repository --token YOUR_TOKEN --labels oracle-vm-runner
+     ```
+
+5. **Run the Runner**:
+   - Start the runner:
+
+     ```sh
+     ./run.sh
+     ```
+
+   - To ensure the runner automatically starts when your VM reboots, install it as a service:
+
+     ```sh
+     sudo ./svc.sh install
+     sudo ./svc.sh start
+     ```
+
+6. **Update GitHub Actions Workflow**:
+   - Update your GitHub Actions workflow to use this specific runner by referencing the label (`oracle-vm-runner`):
+
+     ```yaml
+     name: Oracle Cloud VM CI Workflow
+
+     on: [push, pull_request]
+
+     jobs:
+       build:
+         runs-on: self-hosted
+         labels: [oracle-vm-runner]
+         steps:
+           - name: Checkout code
+             uses: actions/checkout@v3
+
+           - name: Set up Node.js
+             uses: actions/setup-node@v3
+             with:
+               node-version: '16'
+
+           - name: Install dependencies
+             run: npm install
+
+           - name: Run build
+             run: npm run build
+     ```
+
+### Security Considerations
+1. **Networking**:
+   - Ensure that your Oracle Cloud VM is secured using Oracle's network security groups (NSGs) or firewall rules. Only allow necessary traffic and restrict inbound connections to trusted IP addresses.
+   
+2. **Access Control**:
+   - Use an IAM policy in Oracle Cloud to restrict access to this VM.
+   - Limit the permissions of the GitHub runner token. Only provide `repo` and `workflow` scopes to minimize the attack surface.
+
+3. **Monitoring**:
+   - Set up monitoring and alerts in Oracle Cloud to track the runner's activity. You can also use SIEM tools like Wazuh for centralized monitoring (as per your SOC requirements).
+
+### Summary
+- Set up your Oracle Cloud VM as a GitHub Actions self-hosted runner.
+- Register the runner using GitHub's token and instructions.
+- Use labels to direct workflows to your Oracle Cloud VM.
+- Secure and monitor the VM to align with your security standards.
+
+This approach gives you more control over the environment, ensuring compliance and security for your CI/CD operations. Let me know if you need more details on setting up monitoring or securing the runner further.
+
 **********************************************************************
