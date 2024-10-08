@@ -1,3 +1,4 @@
+Self Hosted Runner ->  https://github.com/Umair7865/oracle_oci-cli_and_terraform?tab=readme-ov-file#step-by-step-guide-to-use-oracle-cloud-vm-as-github-actions-runner
 **********************************************************************
 This file can create bastion host in oracle cloud with 1-CPU and 2-GB RAM, just provide secrets within github secrets.
 
