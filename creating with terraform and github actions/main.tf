@@ -41,7 +41,7 @@ variable "region" {}
 variable "compartment_id" {}
 variable "availability_domain" {}
 variable "shape" { default = "VM.Standard.E5.Flex" }
-variable "vm_display_name" { default = "Bastion-host" }
+variable "vm_display_name" { default = "MyTerraformVM" }
 variable "subnet_id" {}
 variable "image_id" {}
 variable "ocpus" { default = 1 }
