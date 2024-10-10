@@ -11,6 +11,7 @@ resource "oci_core_instance" "vm_instance" {
   compartment_id      = var.compartment_id
   shape               = var.shape
   display_name = var.vm_display_name
+}
 
   create_vnic_details {
     subnet_id        = var.subnet_id
