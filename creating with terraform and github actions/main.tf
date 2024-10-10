@@ -31,6 +31,7 @@ resource "oci_core_instance" "vm_instance" {
     ssh_authorized_keys = var.ssh_public_key  # Passing public key content directly
   }
 
+
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
@@ -38,10 +39,10 @@ resource "oci_core_instance" "vm_instance" {
       private_key = file(var.ssh_private_key_path)
       host        = self.public_ip
     }
-
+  
     inline = [
-      "echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections",
-      "export DEBIAN_FRONTEND=noninteractive",
+      "echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections",  # Avoid restart prompts
+      "export DEBIAN_FRONTEND=noninteractive",  # Ensure non-interactive mode for apt
       "curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh | bash -s -- --accept-all-defaults",
       "python3 -m pip install --upgrade pip",
       "curl -LO \"https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl\"",
@@ -50,8 +51,18 @@ resource "oci_core_instance" "vm_instance" {
       "kubectl version --client",
       "sudo apt-get install -y bash-completion",
       "echo 'source <(kubectl completion bash)' >>~/.bashrc",
-      "source ~/.bashrc",
-      "mkdir -p $HOME/.kube"
+      ". ~/.bashrc",
+         
+      # Create the .oci directory and files
+      "sudo mkdir -p $HOME/.oci",              # Create the directory
+      "sudo touch $HOME/.oci/config",           # Create the config file
+      "sudo touch $HOME/.oci/private.key",      # Create the private key file
+      
+      # Set ownership and permissions
+      "sudo chown -R ubuntu:ubuntu $HOME/.oci", # Set ownership to ubuntu for all files in .oci
+      "sudo chmod 700 $HOME/.oci",              # Set the correct permissions for the directory
+      "sudo chmod 600 $HOME/.oci/config",       # Set the correct permissions for the config file
+      "sudo chmod 600 $HOME/.oci/private.key"   # Set the correct permissions for the private key file
     ]
   }
 }
@@ -66,7 +77,7 @@ variable "region" {}
 variable "compartment_id" {}
 variable "availability_domain" {}
 variable "shape" { default = "VM.Standard.E5.Flex" }
-variable "vm_display_name" { default = "MyTerraformVM" }    # enter VM name here
+variable "vm_display_name" { default = "MyTerraformVM" }
 variable "subnet_id" {}
 variable "image_id" {}
 variable "ocpus" { default = 1 }
