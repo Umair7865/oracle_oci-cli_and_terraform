@@ -40,10 +40,18 @@ provisioner "remote-exec" {
   }
 
   inline = [
-    "echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections",
-    "export DEBIAN_FRONTEND=noninteractive",
-    "curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh | bash -s -- --accept-all-defaults",
-    "python3 -m pip install --upgrade pip",
+      "echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections",
+      "export DEBIAN_FRONTEND=noninteractive",
+      "curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh | bash -s -- --accept-all-defaults",
+      "python3 -m pip install --upgrade pip",
+      "curl -LO \"https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl\"",
+      "chmod +x ./kubectl",
+      "sudo mv ./kubectl /usr/local/bin/kubectl",
+      "kubectl version --client",
+      "sudo apt-get install -y bash-completion",
+      "echo 'source <(kubectl completion bash)' >>~/.bashrc",
+      "source ~/.bashrc",
+      "mkdir -p $HOME/.kube"
   ]
 }
 
