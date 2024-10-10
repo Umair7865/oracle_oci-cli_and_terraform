@@ -15,7 +15,7 @@ please make sure the below priority things according to your environment
 
 ### Enter these secrets into your github repo according to your requirements
 
-![image](https://github.com/user-attachments/assets/12aaa549-c8cf-4c38-8d55-75bdae6ecde5)
+![image](https://github.com/user-attachments/assets/e151d53a-ae67-4bb7-82b5-5606d5b3cc28)
 
 
 
