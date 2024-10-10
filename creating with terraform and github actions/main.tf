@@ -10,7 +10,7 @@ resource "oci_core_instance" "vm_instance" {
   availability_domain = var.availability_domain
   compartment_id      = var.compartment_id
   shape               = var.shape
-  display_name        = var.vm_display_name
+  display_name = var.vm_display_name
 
   create_vnic_details {
     subnet_id        = var.subnet_id
@@ -30,9 +30,25 @@ resource "oci_core_instance" "vm_instance" {
   metadata = {
     ssh_authorized_keys = var.ssh_public_key  # Passing public key content directly
   }
+
+provisioner "remote-exec" {
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = file(var.ssh_private_key_path)
+    host        = self.public_ip
+  }
+
+  inline = [
+    "echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections",
+    "export DEBIAN_FRONTEND=noninteractive",
+    "curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh | bash -s -- --accept-all-defaults",
+    "python3 -m pip install --upgrade pip",
+  ]
 }
 
 # Define the variables required by Terraform
+
 variable "tenancy_ocid" {}
 variable "user_ocid" {}
 variable "fingerprint" {}
@@ -48,4 +64,7 @@ variable "ocpus" { default = 1 }
 variable "memory_in_gbs" { default = 2 }
 variable "ssh_public_key" {
   description = "SSH public key content for VM access"
+}
+variable "ssh_private_key_path" {
+  description = "Path to the SSH private key used for remote access"
 }
