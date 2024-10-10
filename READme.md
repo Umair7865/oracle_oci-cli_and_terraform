@@ -10,6 +10,8 @@ This file can create bastion host in oracle cloud with 1-CPU and 2-GB RAM, just 
 please make sure the below priority things according to your environment
 - Change Compartment OCID 
 - Change Subnet OCID
+- Public key and Private Key for installation of OCI and CLI
+- Change User OCID and Fingerprint
   
 **********************************************************************
 
