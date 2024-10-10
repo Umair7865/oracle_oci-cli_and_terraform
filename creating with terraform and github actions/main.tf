@@ -66,7 +66,7 @@ variable "region" {}
 variable "compartment_id" {}
 variable "availability_domain" {}
 variable "shape" { default = "VM.Standard.E5.Flex" }
-variable "vm_display_name" { default = "MyTerraformVM" }
+variable "vm_display_name" { default = "MyTerraformVM" }    # enter VM name here
 variable "subnet_id" {}
 variable "image_id" {}
 variable "ocpus" { default = 1 }
