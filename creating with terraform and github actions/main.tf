@@ -10,8 +10,7 @@ resource "oci_core_instance" "vm_instance" {
   availability_domain = var.availability_domain
   compartment_id      = var.compartment_id
   shape               = var.shape
-  display_name = var.vm_display_name
-
+  display_name        = var.vm_display_name
 
   create_vnic_details {
     subnet_id        = var.subnet_id
@@ -32,15 +31,15 @@ resource "oci_core_instance" "vm_instance" {
     ssh_authorized_keys = var.ssh_public_key  # Passing public key content directly
   }
 
-provisioner "remote-exec" {
-  connection {
-    type        = "ssh"
-    user        = "ubuntu"
-    private_key = file(var.ssh_private_key_path)
-    host        = self.public_ip
-  }
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file(var.ssh_private_key_path)
+      host        = self.public_ip
+    }
 
-  inline = [
+    inline = [
       "echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections",
       "export DEBIAN_FRONTEND=noninteractive",
       "curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh | bash -s -- --accept-all-defaults",
@@ -53,9 +52,10 @@ provisioner "remote-exec" {
       "echo 'source <(kubectl completion bash)' >>~/.bashrc",
       "source ~/.bashrc",
       "mkdir -p $HOME/.kube"
-  ]
- }
+    ]
+  }
 }
+
 # Define the variables required by Terraform
 
 variable "tenancy_ocid" {}
