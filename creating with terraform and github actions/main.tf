@@ -1,11 +1,3 @@
-provider "oci" {
-  tenancy_ocid     = var.tenancy_ocid
-  user_ocid        = var.user_ocid
-  fingerprint      = var.fingerprint
-  private_key_path = var.private_key_path
-  region           = var.region
-}
-
 resource "oci_core_instance" "vm_instance" {
   availability_domain = var.availability_domain
   compartment_id      = var.compartment_id
@@ -57,12 +49,16 @@ resource "oci_core_instance" "vm_instance" {
       "sudo mkdir -p $HOME/.oci",              # Create the directory
       "sudo touch $HOME/.oci/config",           # Create the config file
       "sudo touch $HOME/.oci/private.key",      # Create the private key file
-      
+
       # Set ownership and permissions
       "sudo chown -R ubuntu:ubuntu $HOME/.oci", # Set ownership to ubuntu for all files in .oci
       "sudo chmod 700 $HOME/.oci",              # Set the correct permissions for the directory
       "sudo chmod 600 $HOME/.oci/config",       # Set the correct permissions for the config file
-      "sudo chmod 600 $HOME/.oci/private.key"   # Set the correct permissions for the private key file
+      "sudo chmod 600 $HOME/.oci/private.key",   # Set the correct permissions for the private key file
+
+      # Write the private key and config content from variables into the .oci directory
+      "echo '${var.oci_private_key}' | sudo tee $HOME/.oci/private.key > /dev/null",
+      "echo '${var.oci_config_content}' | sudo tee $HOME/.oci/config > /dev/null"
     ]
   }
 }
@@ -72,7 +68,6 @@ resource "oci_core_instance" "vm_instance" {
 variable "tenancy_ocid" {}
 variable "user_ocid" {}
 variable "fingerprint" {}
-variable "private_key_path" {}
 variable "region" {}
 variable "compartment_id" {}
 variable "availability_domain" {}
@@ -87,4 +82,17 @@ variable "ssh_public_key" {
 }
 variable "ssh_private_key_path" {
   description = "Path to the SSH private key used for remote access"
+}
+
+# Declare the variables for private key and config file content
+variable "oci_private_key" {
+  description = "The private key content to be stored in the .oci directory"
+  type        = string
+  #sensitive   = true  # Marks the variable as sensitive
+}
+
+variable "oci_config_content" {
+  description = "The OCI config file content"
+  type        = string
+  #sensitive   = true  # Marks the variable as sensitive
 }
