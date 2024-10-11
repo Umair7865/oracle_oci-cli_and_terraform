@@ -20,7 +20,7 @@ please make sure the below priority things according to your environment
 - **OCI_SUBNET_ID**             ( Enter OCID of public subnet )
 - **OCI_TENANCY_OCID**          ( Enter tenancy OCID )
 - **OCI_USER_OCID**             ( Enter OCID of user )
-- **PRIVATE_KEY**               
+- **PRIVATE_KEY**               ( Enter content of Private key which is generated using **ssh-keygen -t rsa** cmd )
 - **USER_OCI_PRIVATE_KEY**      ( Enter the content of Private Key you got from **API keys**)
 
   
@@ -31,6 +31,27 @@ please make sure the below priority things according to your environment
 
 ![image](https://github.com/user-attachments/assets/05f64597-64e4-4799-87d3-392a4f5dc0a3)
 
+
+
+**********************************************************************
+
+### Summary of Usage:
+
+| Secret Name                   | Terraform Variable              | Content                                  |
+|-------------------------------|----------------------------------|------------------------------------------|
+| `OCI_TENANCY_OCID`             | `TF_VAR_tenancy_ocid`            | Tenancy OCID                             |
+| `OCI_USER_OCID`                | `TF_VAR_user_ocid`               | User OCID                                |
+| `OCI_KEY_FINGERPRINT`          | `TF_VAR_fingerprint`             | Key Fingerprint                          |
+| `OCI_PRIVATE_KEY`              | Written to `~/.oci/oci_api_key.pem` | Private Key (PEM Format)                 |
+| `OCI_REGION`                   | `TF_VAR_region`                  | OCI Region (e.g., us-ashburn-1)          |
+| `OCI_COMPARTMENT_ID`           | `TF_VAR_compartment_id`          | Compartment OCID                         |
+| `OCI_AVAILABILITY_DOMAIN`      | `TF_VAR_availability_domain`     | Availability Domain (e.g., AD-1)         |
+| `OCI_SUBNET_ID`                | `TF_VAR_subnet_id`               | Subnet OCID                              |
+| `OCI_IMAGE_ID`                 | `TF_VAR_image_id`                | Image OCID                               |
+| `OCI_SSH_PUBLIC_KEY`           | `TF_VAR_ssh_public_key`          | Public SSH Key Content                   |
+| `private_key`                  | `TF_VAR_ssh_private_key_path`    | SSH Private Key Path or Content          |
+| `User_OCI_Private_Key`         | `TF_VAR_oci_private_key`         | User's OCI Private Key (PEM Format)      |
+| `OCI_Config_Content`           | `TF_VAR_oci_config_content`      | OCI Config File Content                  |
 
 
 **********************************************************************
