@@ -8,16 +8,28 @@ This file can create bastion host in oracle cloud with 1-CPU and 2-GB RAM, just 
 
 ## For Creating Bastion-host using github actions:
 please make sure the below priority things according to your environment
-- Change Compartment OCID 
-- Change Subnet OCID
-- Public key and Private Key for installation of OCI and CLI
-- Change User OCID and Fingerprint
+- OCI_AVAILABILITY_DOMAIN   ( Enter Availability Domain like "hxIl:ME-JEDDAH-1-AD-1" )
+- OCI_COMPARTMENT_ID        ( Enter Compartment OCID )
+- OCI_CONFIG_CONTENT        ( Enter $HOME/.oci/config File Content)
+- OCI_IMAGE_ID              ( Enter Image OCID, you can get through Oracle CLI )
+- OCI_KEY_FINGERPRINT       ( Enter Fingerprint from go to **My profile** _(top right corner)_ --- go to **API keys** )
+- OCI_PRIVATE_KEY           ( Enter Path to the SSH private key used for remote access )
+- OCI_PRIVATE_KEY_PATH
+- OCI_REGION                ( Enter region like "me-jeddah-1" )
+- OCI_SSH_PUBLIC_KEY        ( Generate a public and private key using **ssh-keygen -t rsa** cmd and Enter the content of Public key )
+- OCI_SUBNET_ID             ( Enter OCID of public subnet )
+- OCI_TENANCY_OCID          ( Enter tenancy OCID )
+- OCI_USER_OCID             ( Enter OCID of user )
+- PRIVATE_KEY               
+- USER_OCI_PRIVATE_KEY      ( Enter the content of Private Key you got from **API keys**)
+
   
+
 **********************************************************************
 
 ### Enter these secrets into your github repo according to your requirements
 
-![image](https://github.com/user-attachments/assets/e151d53a-ae67-4bb7-82b5-5606d5b3cc28)
+![image](https://github.com/user-attachments/assets/05f64597-64e4-4799-87d3-392a4f5dc0a3)
 
 
 
