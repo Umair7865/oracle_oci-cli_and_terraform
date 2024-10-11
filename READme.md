@@ -48,7 +48,7 @@ please make sure the below priority things according to your environment
 7| `OCI_SUBNET_ID`                | `TF_VAR_subnet_id`               | Subnet OCID                              |
 8| `OCI_IMAGE_ID`                 | `TF_VAR_image_id`                | Image OCID                               |
 9| `OCI_SSH_PUBLIC_KEY`           | `TF_VAR_ssh_public_key`          | Public SSH Key Content                   |
-10| `private_key`                  | `TF_VAR_ssh_private_key_path`    | SSH Private Key Content to access instance          |
+10| `PRIVATE_KEY`                  | `TF_VAR_ssh_private_key_path`    | SSH Private Key Content to access instance          |
 11| `User_OCI_Private_Key`         | `TF_VAR_oci_private_key`         | User's OCI Private Key content      |
 12| `OCI_Config_Content`           | `TF_VAR_oci_config_content`      | OCI Config File Content                  |
 
