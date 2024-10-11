@@ -23,19 +23,10 @@ please make sure the below priority things according to your environment
 - **PRIVATE_KEY**               ( Enter content of Private key which is generated using **ssh-keygen -t rsa** cmd )
 - **USER_OCI_PRIVATE_KEY**      ( Enter the content of Private Key you got from **API keys**)
 
-  
 
 **********************************************************************
 
-### Enter these secrets into your github repo according to your requirements
-
-![image](https://github.com/user-attachments/assets/05f64597-64e4-4799-87d3-392a4f5dc0a3)
-
-
-
-**********************************************************************
-
-### Summary of Usage:
+### Use these below Secret Variables as it is:
 
 0| Secret Name                   | Terraform Variable              | Content                                  |
 -|-------------------------------|----------------------------------|------------------------------------------|
