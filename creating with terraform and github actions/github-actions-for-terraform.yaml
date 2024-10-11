@@ -15,7 +15,17 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+    
+#    - name: Install Terraform  
+#      uses: hashicorp/setup-terraform@v1
 
+#    - name: Set up OCI Private Key
+#      run: |
+#        mkdir -p ~/.oci
+#        echo "${{ secrets.OCI_PRIVATE_KEY }}" > ~/.oci/oci_api_key.pem
+#        chmod 600 ~/.oci/oci_api_key.pem
+#        ls -l ~/.oci/oci_api_key.pem
+    
     - name: Terraform Init
       run: | 
         cd Bastion-host
@@ -39,4 +49,4 @@ jobs:
         TF_VAR_ssh_private_key_path: "${{ secrets.private_key }}"
         TF_VAR_oci_private_key: "${{ secrets.User_OCI_Private_Key }}"
         TF_VAR_oci_config_content: "${{ secrets.OCI_Config_Content }}"
-        TF_VAR_vm_display_name: "${{ github.event.inputs.vm_name }}"  # name will pass here after workflow dispatch
+        TF_VAR_vm_display_name: "${{ github.event.inputs.vm_name }}"
