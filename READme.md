@@ -8,19 +8,19 @@ This file can create bastion host in oracle cloud with 1-CPU and 2-GB RAM, just 
 
 ## For Creating Bastion-host using github actions:
 please make sure the below priority things according to your environment
-- `OCI_AVAILABILITY_DOMAIN`   ( Enter Availability Domain like "hxIl:ME-JEDDAH-1-AD-1" )
-- `OCI_COMPARTMENT_ID`        ( Enter Compartment OCID )
-- `OCI_CONFIG_CONTENT`        ( Enter $HOME/.oci/config File Content)
-- `OCI_IMAGE_ID`              ( Enter Image OCID, you can get through Oracle CLI )
-- `OCI_KEY_FINGERPRINT`       ( Enter Fingerprint from go to **My profile** _(top right corner)_ --- go to **API keys** )
-- `OCI_PRIVATE_KEY`           ( Enter Path to the SSH private key used for remote access )
-- `OCI_REGION`                ( Enter region like "me-jeddah-1" )
-- `OCI_SSH_PUBLIC_KEY`        ( Generate a public and private key using **ssh-keygen -t rsa** cmd and Enter the content of Public key )
-- `OCI_SUBNET_ID`             ( Enter OCID of public subnet )
 - `OCI_TENANCY_OCID`          ( Enter tenancy OCID )
 - `OCI_USER_OCID`             ( Enter OCID of user )
+- `OCI_KEY_FINGERPRINT`       ( Enter Fingerprint from go to **My profile** _(top right corner)_ --- go to **API keys** )
+- `OCI_REGION`                ( Enter region like "me-jeddah-1" )
+- `OCI_COMPARTMENT_ID`        ( Enter Compartment OCID )
+- `OCI_AVAILABILITY_DOMAIN`   ( Enter Availability Domain like "hxIl:ME-JEDDAH-1-AD-1" )
+- `OCI_SUBNET_ID`             ( Enter OCID of public subnet )
+- `OCI_IMAGE_ID`              ( Enter Image OCID, you can get through Oracle CLI )
+- `OCI_SSH_PUBLIC_KEY`        ( Generate a public and private key using **ssh-keygen -t rsa** cmd and Enter the content of Public key )
 - `PRIVATE_KEY`               ( Enter content of Private key which is generated using **ssh-keygen -t rsa** cmd )
 - `USER_OCI_PRIVATE_KEY`      ( Enter the content of Private Key you got from **API keys**)
+- `OCI_CONFIG_CONTENT`        ( Enter $HOME/.oci/config File Content)
+
 
 
 **********************************************************************
