@@ -1,8 +1,16 @@
+#provider "oci" {
+#  tenancy_ocid     = var.tenancy_ocid
+#  user_ocid        = var.user_ocid
+#  fingerprint      = var.fingerprint
+#  private_key_path = var.private_key_path  # Path to the private key file
+#  region           = var.region
+#}
+
 resource "oci_core_instance" "vm_instance" {
   availability_domain = var.availability_domain
   compartment_id      = var.compartment_id
   shape               = var.shape
-  display_name        = var.vm_display_name  # name will pass here after workflow dispatch
+  display_name        = var.vm_display_name
 
   create_vnic_details {
     subnet_id        = var.subnet_id
@@ -32,11 +40,21 @@ resource "oci_core_instance" "vm_instance" {
       host        = self.public_ip
     }
   
-    inline = [
+      inline = [  
+      # Disable unattended upgrades temporarily
+      "sudo systemctl stop unattended-upgrades",
+      "sudo systemctl disable unattended-upgrades",
+      
+      # Avoid prompts for restarting services
+      "sudo apt-get -y remove --purge unattended-upgrades",
       "echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections",  # Avoid restart prompts
       "export DEBIAN_FRONTEND=noninteractive",  # Ensure non-interactive mode for apt
+      
+      # Installing oci cli
       "curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh | bash -s -- --accept-all-defaults",
       "python3 -m pip install --upgrade pip",
+
+      # Installing Kubectl
       "curl -LO \"https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl\"",
       "chmod +x ./kubectl",
       "sudo mv ./kubectl /usr/local/bin/kubectl",
@@ -58,7 +76,12 @@ resource "oci_core_instance" "vm_instance" {
 
       # Write the private key and config content from variables into the .oci directory
       "echo '${var.oci_private_key}' | sudo tee $HOME/.oci/private.key > /dev/null",
-      "echo '${var.oci_config_content}' | sudo tee $HOME/.oci/config > /dev/null"
+      "echo '${var.oci_config_content}' | sudo tee $HOME/.oci/config > /dev/null",
+  
+      # Re-enable unattended upgrades after completion
+      "sudo apt-get -y install unattended-upgrades",
+      "sudo systemctl enable unattended-upgrades",
+      "sudo systemctl start unattended-upgrades"
     ]
   }
 }
