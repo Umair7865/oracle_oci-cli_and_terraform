@@ -2,7 +2,7 @@ resource "oci_core_instance" "vm_instance" {
   availability_domain = var.availability_domain
   compartment_id      = var.compartment_id
   shape               = var.shape
-  display_name        = var.vm_display_name
+  display_name        = var.vm_display_name  # name will pass here after workflow dispatch
 
   create_vnic_details {
     subnet_id        = var.subnet_id
