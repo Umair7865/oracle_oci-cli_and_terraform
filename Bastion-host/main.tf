@@ -10,7 +10,7 @@ resource "oci_core_instance" "vm_instance" {
   availability_domain = var.availability_domain
   compartment_id      = var.compartment_id
   shape               = var.shape
-  display_name        = var.vm_display_name
+  display_name        = var.vm_display_name   # name getting through github actions "github.event.inputs.vm_name"
 
   create_vnic_details {
     subnet_id        = var.subnet_id
@@ -36,7 +36,7 @@ resource "oci_core_instance" "vm_instance" {
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file(var.ssh_private_key_path)
+      private_key = file(var.ssh_private_key_path)  # (Variable declared into line number 107 and comments also ) 
       host        = self.public_ip
     }
   
@@ -101,22 +101,22 @@ variable "image_id" {}
 variable "ocpus" { default = 1 }
 variable "memory_in_gbs" { default = 2 }
 variable "ssh_public_key" {
-  description = "SSH public key content for VM access"
+  description = "SSH public key content for VM access stored into VM directly"
 }
 
 variable "ssh_private_key_path" {
-  description = "Path to the SSH private key used for remote access"
+  description = "Path to the SSH private key which is stored in self-hosted Runner used for remote access by Terraform and install necessary packages for OKE"
 }
 
 # Declare the variables for private key and config file content
 variable "oci_private_key" {
-  description = "The private key content to be stored in the .oci directory"
+  description = "The private key content to be stored in the .oci directory of VM which is created using this code"
   type        = string
   #sensitive   = true  # Marks the variable as sensitive
 }
 
 variable "oci_config_content" {
-  description = "The OCI config file content"
+  description = "The OCI config file content is stored into VM which is created using this code"
   type        = string
   #sensitive   = true  # Marks the variable as sensitive
 }

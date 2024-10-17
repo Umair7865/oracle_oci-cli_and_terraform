@@ -15,18 +15,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
-#    - name: Install Terraform  
-#      uses: hashicorp/setup-terraform@v1
-
-#    - name: Set up OCI Private Key
-#      run: |
-#        mkdir -p ~/.oci
-#        echo "${{ secrets.OCI_PRIVATE_KEY }}" > ~/.oci/oci_api_key.pem
-#        chmod 600 ~/.oci/oci_api_key.pem
-#        ls -l ~/.oci/oci_api_key.pem
-
-
+  
     - name: Set up SSH Private Key
       run: |
         echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/bastion_instance_private_key.pem
