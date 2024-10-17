@@ -46,7 +46,7 @@ jobs:
         TF_VAR_subnet_id: ${{ secrets.OCI_SUBNET_ID }}
         TF_VAR_image_id: ${{ secrets.OCI_IMAGE_ID }}
         TF_VAR_ssh_public_key: "${{ secrets.OCI_SSH_PUBLIC_KEY }}"  # Pass public key content directly
-        TF_VAR_ssh_private_key_path: "${{ secrets.private_key }}"
-        TF_VAR_oci_private_key: "${{ secrets.User_OCI_Private_Key }}"
-        TF_VAR_oci_config_content: "${{ secrets.OCI_Config_Content }}"
+        TF_VAR_ssh_private_key_path: "${{ secrets.PRIVATE_KEY }}"
+        TF_VAR_oci_private_key: "${{ secrets.USER_OCI_PRIVATE_KEY }}"
+        TF_VAR_oci_config_content: "${{ secrets.OCI_CONFIG_CONTENT }}"
         TF_VAR_vm_display_name: "${{ github.event.inputs.vm_name }}"
