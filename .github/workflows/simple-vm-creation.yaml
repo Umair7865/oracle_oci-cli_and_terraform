@@ -1,0 +1,60 @@
+name: Deploy Bastion on Oracle Cloud
+
+on:
+  workflow_dispatch:
+    inputs:
+      vm_name:
+        description: 'ENTER Name of VM'
+        required: true
+        default: 'Bastion-host'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Install OCI CLI
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-pip
+        pip3 install oci-cli
+
+    - name: Create OCI Config File
+      run: |
+        mkdir -p ~/.oci
+        echo "[DEFAULT]" > ~/.oci/config
+        echo "user=${{ secrets.OCI_USER_OCID }}" >> ~/.oci/config
+        echo "fingerprint=${{ secrets.OCI_KEY_FINGERPRINT }}" >> ~/.oci/config
+        echo "key_file=~/.oci/oci_private_key.pem" >> ~/.oci/config
+        echo "tenancy=${{ secrets.OCI_TENANCY_OCID }}" >> ~/.oci/config
+        echo "region=${{ secrets.OCI_REGION }}" >> ~/.oci/config
+
+    - name: Create Private Key File
+      run: |
+        echo "${{ secrets.OCI_PRIVATE_KEY }}" > ~/.oci/oci_private_key.pem
+        chmod 600 ~/.oci/oci_private_key.pem
+
+    - name: Set permissions for OCI config and private key
+      run: |
+        chmod 600 ~/.oci/config
+        chmod 600 ~/.oci/oci_private_key.pem
+
+    - name: Save Public Key
+      run: |
+        echo "${{ secrets.OCI_SSH_PUBLIC_KEY }}" > ~/.oci/my_public_key.pub
+
+    - name: Launch VM Instance
+      run: |
+        oci compute instance launch \
+          --compartment-id ${{ secrets.OCI_COMPARTMENT_ID }} \
+          --availability-domain ${{ secrets.OCI_AVAILABILITY_DOMAIN }} \
+          --shape "VM.Standard.E5.Flex" \
+          --subnet-id ${{ secrets.OCI_SUBNET_ID }} \
+          --image-id ${{ secrets.OCI_IMAGE_ID }} \
+          --assign-public-ip true \
+          --ssh-authorized-keys-file ~/.oci/my_public_key.pub \
+          --shape-config '{ "ocpus": 1, "memoryInGBs": 2 }' \
+          --display-name ${{ github.event.inputs.vm_name }}
