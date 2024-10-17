@@ -25,7 +25,15 @@ jobs:
 #        echo "${{ secrets.OCI_PRIVATE_KEY }}" > ~/.oci/oci_api_key.pem
 #        chmod 600 ~/.oci/oci_api_key.pem
 #        ls -l ~/.oci/oci_api_key.pem
-    
+
+
+    - name: Set up SSH Private Key
+      run: |
+        echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/bastion_instance_private_key.pem
+        chmod 600 ~/.ssh/bastion_instance_private_key.pem
+      env:
+        TF_VAR_ssh_private_key_path: ~/.ssh/bastion_instance_private_key.pem  # Pass the path to Terraform
+
     - name: Terraform Init
       run: | 
         cd Bastion-host
@@ -46,7 +54,8 @@ jobs:
         TF_VAR_subnet_id: ${{ secrets.OCI_SUBNET_ID }}
         TF_VAR_image_id: ${{ secrets.OCI_IMAGE_ID }}
         TF_VAR_ssh_public_key: "${{ secrets.OCI_SSH_PUBLIC_KEY }}"  # Pass public key content directly
-        TF_VAR_ssh_private_key_path: "${{ secrets.PRIVATE_KEY }}"
+        #TF_VAR_ssh_private_key_path: "${{ secrets.PRIVATE_KEY }}"
         TF_VAR_oci_private_key: "${{ secrets.USER_OCI_PRIVATE_KEY }}"
+        TF_VAR_ssh_private_key_path: ~/.ssh/bastion_instance_private_key.pem  # Ensure this path is used for SSH
         TF_VAR_oci_config_content: "${{ secrets.OCI_CONFIG_CONTENT }}"
         TF_VAR_vm_display_name: "${{ github.event.inputs.vm_name }}"
