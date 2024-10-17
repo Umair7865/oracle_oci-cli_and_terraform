@@ -36,7 +36,7 @@ resource "oci_core_instance" "vm_instance" {
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file(var.ssh_private_key_path)
+     # private_key = file(var.ssh_private_key_path)
       host        = self.public_ip
     }
   
@@ -103,9 +103,10 @@ variable "memory_in_gbs" { default = 2 }
 variable "ssh_public_key" {
   description = "SSH public key content for VM access"
 }
-variable "ssh_private_key_path" {
-  description = "Path to the SSH private key used for remote access"
-}
+
+#variable "ssh_private_key_path" {
+#  description = "Path to the SSH private key used for remote access"
+#}
 
 # Declare the variables for private key and config file content
 variable "oci_private_key" {
