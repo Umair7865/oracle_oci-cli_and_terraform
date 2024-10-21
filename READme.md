@@ -1,3 +1,5 @@
+Right now the bastion server will be created on stagging compartment and staging VPC
+
 ### [Click ME to View _Self Hosted Runner Details_](https://github.com/Umair7865/self-hosted_runner?tab=readme-ov-file#how-to-create-your-own-self-hosted-runner-for-github-actions)
 
 **********************************************************************
