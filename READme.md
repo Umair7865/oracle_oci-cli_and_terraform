@@ -1,4 +1,4 @@
-[Self Hosted Runner Details](https://github.com/Umair7865/self-hosted_runner?tab=readme-ov-file#how-to-create-your-own-self-hosted-runner-for-github-actions)
+### [Self Hosted Runner Details](https://github.com/Umair7865/self-hosted_runner?tab=readme-ov-file#how-to-create-your-own-self-hosted-runner-for-github-actions)
 
 **********************************************************************
 This file can create bastion host in oracle cloud with 1-CPU and 2-GB RAM, just provide secrets within github secrets.
