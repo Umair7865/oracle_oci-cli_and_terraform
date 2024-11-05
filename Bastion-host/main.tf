@@ -62,7 +62,10 @@ resource "oci_core_instance" "vm_instance" {
       "sudo apt-get install -y bash-completion",
       "echo 'source <(kubectl completion bash)' >>~/.bashrc",
       ". ~/.bashrc",
-         
+
+      # MySQL Client Installation
+      "sudo apt-get install -y mysql-client",
+      
       # Create the .oci directory and files
       "sudo mkdir -p $HOME/.oci",              # Create the directory
       "sudo touch $HOME/.oci/config",           # Create the config file
