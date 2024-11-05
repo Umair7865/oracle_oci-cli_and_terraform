@@ -1,4 +1,3 @@
-Right now the bastion server will be created on stagging compartment and staging VPC.
 
 change `OCI_COMPARTMENT-ID` and `OCI_SUBNET-ID` according your requirement, and if you provide private key `PRIVATE_KEY` than also pass public key `OCI_SSH_PUBLIC_KEY` as well within Secerts.
 
