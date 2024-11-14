@@ -66,6 +66,9 @@ resource "oci_core_instance" "vm_instance" {
       # MySQL Client Installation
       "sudo apt-get install -y mysql-client",
       
+      # Installation Net Tools
+      "sudo apt install net-tools -y",
+
       # Create the .oci directory and files
       "sudo mkdir -p $HOME/.oci",              # Create the directory
       "sudo touch $HOME/.oci/config",           # Create the config file
