@@ -6,6 +6,16 @@ provider "oci" {
   region           = var.region
 }
 
+terraform {
+  required_providers {
+    oci = {
+      source  = "oracle/oci"
+      version = "~> 6.23.0"
+    }
+  }
+}
+
+
 
 resource "oci_core_instance" "vm_instance" {
   availability_domain = var.availability_domain
