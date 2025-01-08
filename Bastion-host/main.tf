@@ -42,65 +42,83 @@ resource "oci_core_instance" "vm_instance" {
     ssh_authorized_keys = var.ssh_public_key  # Passing public key content directly
   }
 
+provisioner "remote-exec" {
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = file(var.ssh_private_key_path)  # Ensure this variable is correctly defined
+    host        = self.public_ip
+  }
 
-  provisioner "remote-exec" {
-    connection {
-      type        = "ssh"
-      user        = "ubuntu"
-      private_key = file(var.ssh_private_key_path)  # (Variable declared into line number 107 and comments also ) 
-      host        = self.public_ip
-    }
-  
-      inline = [  
+  inline = [
+    <<-EOT
+      #!/bin/bash
+      set -e  # Exit immediately if a command exits with a non-zero status
+
       # Disable unattended upgrades temporarily
-      "sudo systemctl stop unattended-upgrades",
-      "sudo systemctl disable unattended-upgrades",
-      
+      sudo systemctl stop unattended-upgrades
+      sudo systemctl disable unattended-upgrades
+
       # Avoid prompts for restarting services
-      "sudo apt-get -y remove --purge unattended-upgrades",
-      "echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections",  # Avoid restart prompts
-      "export DEBIAN_FRONTEND=noninteractive",  # Ensure non-interactive mode for apt
-      
-      # Installing oci cli
-      "curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh | bash -s -- --accept-all-defaults",
-      "python3 -m pip install --upgrade pip",
+      sudo apt-get -y remove --purge unattended-upgrades
+      echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections
+      export DEBIAN_FRONTEND=noninteractive
+
+      # Installing OCI CLI
+      curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh | bash -s -- --accept-all-defaults
+      source $HOME/.bashrc  # Load OCI CLI into the current shell
+      python3 -m pip install --upgrade pip
 
       # Installing Kubectl
-      "curl -LO \"https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl\"",
-      "chmod +x ./kubectl",
-      "sudo mv ./kubectl /usr/local/bin/kubectl",
-      "kubectl version --client",
-      "sudo apt-get install -y bash-completion",
-      "echo 'source <(kubectl completion bash)' >>~/.bashrc",
-      ". ~/.bashrc",
+      curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      chmod +x ./kubectl
+      sudo mv ./kubectl /usr/local/bin/kubectl
+      kubectl version --client
+      sudo apt-get install -y bash-completion
+      echo 'source <(kubectl completion bash)' >>~/.bashrc
+      source ~/.bashrc
 
       # MySQL Client Installation
-      "sudo apt-get install -y mysql-client",
-      
+      sudo apt-get install -y mysql-client
+
       # Installation Net Tools
-      "sudo apt install net-tools -y",
+      sudo apt-get install -y net-tools
 
       # Create the .oci directory and files
-      "sudo mkdir -p $HOME/.oci",              # Create the directory
-      "sudo touch $HOME/.oci/config",           # Create the config file
-      "sudo touch $HOME/.oci/private.key",      # Create the private key file
+      mkdir -p $HOME/.oci
+      touch $HOME/.oci/config
+      touch $HOME/.oci/private.key
 
       # Set ownership and permissions
-      "sudo chown -R ubuntu:ubuntu $HOME/.oci", # Set ownership to ubuntu for all files in .oci
-      "sudo chmod 700 $HOME/.oci",              # Set the correct permissions for the directory
-      "sudo chmod 600 $HOME/.oci/config",       # Set the correct permissions for the config file
-      "sudo chmod 600 $HOME/.oci/private.key",   # Set the correct permissions for the private key file
+      sudo chown -R ubuntu:ubuntu $HOME/.oci
+      sudo chmod 700 $HOME/.oci
+      sudo chmod 600 $HOME/.oci/config
+      sudo chmod 600 $HOME/.oci/private.key
 
       # Write the private key and config content from variables into the .oci directory
-      "echo '${var.oci_private_key}' | sudo tee $HOME/.oci/private.key > /dev/null",
-      "echo '${var.oci_config_content}' | sudo tee $HOME/.oci/config > /dev/null",
-  
+      echo '${var.oci_private_key}' | sudo tee $HOME/.oci/private.key > /dev/null
+      echo '${var.oci_config_content}' | sudo tee $HOME/.oci/config > /dev/null
+
+      # Add Docker's official GPG key:
+      sudo apt-get update
+      sudo apt-get install -y ca-certificates curl
+      sudo install -m 0755 -d /etc/apt/keyrings
+      sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+      sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+      # Add the repository to Apt sources:
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+      # Install Docker
+      sudo apt-get update
+      sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
       # Re-enable unattended upgrades after completion
-      "sudo apt-get -y install unattended-upgrades",
-      "sudo systemctl enable unattended-upgrades",
-      "sudo systemctl start unattended-upgrades"
-    ]
-  }
+      sudo apt-get -y install unattended-upgrades
+      sudo systemctl enable unattended-upgrades
+      sudo systemctl start unattended-upgrades
+    EOT
+  ]
 }
 
 # Define the variables required by Terraform
