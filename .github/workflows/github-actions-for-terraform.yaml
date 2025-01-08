@@ -26,7 +26,7 @@ jobs:
     - name: Terraform Init
       run: | 
         cd Bastion-host
-        terraform init
+        terraform init -upgrade
 
     - name: Terraform Apply
       run: | 
