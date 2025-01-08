@@ -2,20 +2,9 @@ provider "oci" {
   tenancy_ocid     = var.tenancy_ocid
   user_ocid        = var.user_ocid
   fingerprint      = var.fingerprint
-  private_key_path = var.ssh_private_key_path  # Path to the private key file
+  private_key_path = var.oci_private_key  # Path to the private key file
   region           = var.region
 }
-
-
-terraform {
-  required_providers {
-    oci = {
-      source  = "oracle/oci"
-      version = "~> 6.23.0"
-    }
-  }
-}
-
 
 
 resource "oci_core_instance" "vm_instance" {
